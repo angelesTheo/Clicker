@@ -3,3 +3,4 @@ Update 1.0.1 :
 - Continuer de recevoir des récompense sans que la page soit en premier plan.
 - Les bâtiments doivent scale sur des paliers et le prix ( x10; x50; etc = 0.3 -> 0.6 ).
 - Les achats x10 etc doivent affiché le rpxia atteindre pour en acheter x10.
+- Mettre les boutons x10 et max directement dans l'onglet des batiments a côté de la stat en seconde.
