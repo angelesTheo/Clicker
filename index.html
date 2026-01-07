@@ -1,0 +1,227 @@
+﻿<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aurelia Capital — Trading Incremental</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- TOP BAR -->
+    <div class="row between" style="margin-bottom:14px; align-items:flex-end;">
+      <div>
+        <h1>Aurelia Capital</h1>
+        <div class="muted">Incremental • Trading / Fund Ops</div>
+      </div>
+      <div class="row">
+        <span class="pill">Date: <b id="pbDate">—</b></span>
+        <button id="themeToggle" class="smallbtn">Mode: Light</button>
+      </div>
+    </div>
+
+    <!-- BUY MODE -->
+    <div class="row" style="margin-bottom:12px;">
+      <span class="pill">Mode achat: <b id="buyModeLbl">x1</b></span>
+      <button id="buy1" class="smallbtn">x1</button>
+      <button id="buy10" class="smallbtn">x10</button>
+      <button id="buyMax" class="smallbtn">MAX</button>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: CORE LOOP -->
+      <div class="card">
+        <h2>Portfolio</h2>
+        <div class="row between" style="align-items:flex-end;">
+          <div>
+            <div class="big" id="gold">0 €</div>
+            <div class="muted">P&amp;L/sec: <b id="gps">0</b> • Total gagné: <b id="total">0</b></div>
+          </div>
+          <div class="row">
+            <span class="pill">Prestige total: <b id="ppTotal">0</b></span>
+            <span class="pill">Disponible: <b id="ppAvail">0</b></span>
+            <span class="pill">Mult: <b id="prestMult">x1.00</b></span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <h2>Trading manuel</h2>
+        <div class="row">
+          <button id="clickBtn" class="btn-good">Trader: +<span id="clickPower">1</span> Cash</button>
+          <span class="pill">Crit: <b id="critInfo">—</b></span>
+          <span class="pill">Chance: <b id="critChance">0%</b></span>
+          <span class="pill">Flow: <b id="streak">x1.00</b></span>
+          <span class="pill">Heat: <b id="risk">0%</b></span>
+        </div>
+
+        <div class="sep"></div>
+
+        <h2>Bâtiments</h2>
+        <div id="buildings" class="list"></div>
+
+        <div class="sep"></div>
+
+        <h2>Upgrades</h2>
+        <div class="muted" style="margin-bottom:10px;">Upgrades “run” (reset au prestige)</div>
+        <div id="upgrades" class="list"></div>
+
+        <div class="sep"></div>
+
+        <h2>Transactions</h2>
+        <div class="muted" style="margin-bottom:10px;">Journal (scroll interne — ne bouge plus la page).</div>
+        <div id="tradeLog"></div>
+      </div>
+
+      <!-- RIGHT: META LOOP -->
+      <div class="card">
+
+        <!-- CARRIERE -->
+        <h2>Carrière</h2>
+        <div class="muted" style="margin-bottom:10px;">Chapitres et objectifs (persistants).</div>
+
+        <div class="item">
+          <div class="left">
+            <div class="name" id="careerChapterName">—</div>
+            <div class="desc" id="careerChapterDesc">—</div>
+            <div class="meta">
+              Étape: <b id="careerStepIdx">—</b> • Récompense chapitre: <b id="careerReward">—</b>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <div class="progress" style="flex:1; min-width:180px;"><div id="careerBar"></div></div>
+              <span class="pill">Points: <b id="careerPoints">0</b></span>
+              <span class="pill">Bonus carrière: <b id="careerMult">x1.00</b></span>
+            </div>
+          </div>
+          <div class="right">
+            <button id="careerClaim" class="btn-good" disabled>Réclamer</button>
+          </div>
+        </div>
+
+        <div class="item" style="margin-top:10px;">
+          <div class="left">
+            <div class="name" id="careerStepName">Objectif: —</div>
+            <div class="desc" id="careerStepDesc">—</div>
+          </div>
+          <div class="right">
+            <span class="pill">Progression: <b id="careerStepProg">—</b></span>
+          </div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- EXPLOITS -->
+        <h2>Exploits</h2>
+        <div class="muted" style="margin-bottom:10px;">Bonus permanents (passifs) en validant des objectifs.</div>
+
+        <div class="achTop">
+          <div class="row between" style="margin-bottom:10px;">
+            <div class="row">
+              <span class="pill">Débloqués: <b id="achDone">0</b>/<b id="achTotal">0</b></span>
+              <span class="pill">Réclamables: <b id="achClaimable">0</b></span>
+              <span class="pill">Affichés: <b id="achShown">0</b></span>
+            </div>
+            <div class="row">
+              <select id="achSort" class="smallselect" title="Tri des exploits">
+                <option value="default">Tri: Défaut</option>
+                <option value="progress">Tri: Progression</option>
+                <option value="reward">Tri: Récompense</option>
+              </select>
+
+              <button id="achClaimAll" class="smallbtn btn-good">Réclamer tout</button>
+              <button id="achExpandAll" class="smallbtn">Tout ouvrir</button>
+              <button id="achCollapseAll" class="smallbtn">Tout fermer</button>
+            </div>
+          </div>
+
+          <div class="row between" style="gap:12px; margin-bottom:10px;">
+            <div class="row" style="flex:1; min-width:240px;">
+              <input id="achSearch" type="text" placeholder="Rechercher un exploit…" style="width:100%;">
+            </div>
+
+            <div class="achFilters">
+              <button class="smallbtn" data-achfilter="all">Tous</button>
+              <button class="smallbtn" data-achfilter="inprogress">En cours</button>
+              <button class="smallbtn" data-achfilter="claimable">Réclamables</button>
+              <button class="smallbtn" data-achfilter="completed">Complétés</button>
+            </div>
+          </div>
+
+          <div class="row between" style="margin-bottom:10px;">
+            <div class="row" style="flex:1;">
+              <div class="progress" style="flex:1; min-width:180px;"><div id="achBar"></div></div>
+              <span class="pill">Progression: <b id="achPct">0%</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scrollBox" id="achList"></div>
+
+        <div class="sep"></div>
+
+        <!-- PRESTIGE -->
+        <h2>Prestige</h2>
+        <div class="muted">Reset run pour gagner des points permanents</div>
+
+        <div class="sep"></div>
+
+        <div class="row between">
+          <span class="pill">Gain booste: <b id="ppGain">0</b></span>
+          <span class="pill">Gain brut: <b id="ppGainBase">0</b></span>
+          <span class="pill">Palier fixe: <b id="ppNext">0</b></span>
+        </div>
+
+        <div style="margin-top:10px;">
+          <button id="prestigeBtn" class="btn-bad">Nouveau fonds</button>
+        </div>
+
+        <div class="sep"></div>
+
+        <h2>Boutique prestige</h2>
+        <div class="muted" style="margin-bottom:10px;">Dépense des points (permanent).</div>
+        <div id="prestigeShop" class="list"></div>
+
+        <div class="sep"></div>
+
+        <h2>Régulations</h2>
+        <div class="muted" style="margin-bottom:10px;">Contraintes ↔ bonus de gain prestige.</div>
+        <div class="row" style="margin-bottom:10px;">
+          <span class="pill">Bonus prestige: <b id="regBonus">x1.00</b></span>
+        </div>
+        <div id="regs" class="list"></div>
+
+        <div class="sep"></div>
+
+        <h2>Système</h2>
+        <div class="row">
+          <button id="saveBtn">Sauvegarder</button>
+          <button id="wipeBtn" class="btn-bad">Reset</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="offlineModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-title">Gains offline</div>
+      <div class="modal-desc">Pendant ton absence (max 12h), tu as gagné <b id="offlineAmount">0</b> €.</div>
+      <div class="modal-actions">
+        <button id="offlineClaim" class="btn-good">Réclamer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
